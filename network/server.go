@@ -31,7 +31,7 @@ free:
 	for {
 		select {
 		case rpc := <-s.rpcCh:
-			fmt.Printf("%+v\n", rpc)
+			fmt.Printf("Server Say: %s\n", string(rpc.Payload))
 		case <-s.quitCh:
 			break free
 		case <-ticker.C:
@@ -46,6 +46,7 @@ func (s *Server) initTransports() {
 	for _, tr := range s.Transports {
 		go func(tr Transport) {
 			for rpc := range tr.Consume() {
+				//fmt.Println("Server say: for range is running!")
 				s.rpcCh <- rpc
 			}
 		}(tr)
